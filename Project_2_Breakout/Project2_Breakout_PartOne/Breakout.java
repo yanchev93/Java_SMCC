@@ -3,13 +3,15 @@
  *  Project: No:2
  *  Author:  Teodor Yanchev
  *  Due Date: September 30 at 11:59 PM
- *  Pledged: I wrote this code. Help was found by www.geeksforgeeks.org, googling, www.stackoverflow.com, youtube.com, trigonometry class.
+ *  Pledged: I wrote this code. Help was found by googling, stackoverflow.com, youtube.com, trigonometry class.
  *
  */
 package breakout;
 
 import acm.graphics.*;
 import acm.program.*;
+import acm.util.*;
+import java.applet.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Random;
@@ -82,13 +84,9 @@ public class Breakout extends GraphicsProgram {
      */
     private static final int NTURNS = 3;
     /**
-     * Minimum velocity of the ball
-     */
-    private static final double MIN_VELOCITY = 3.5;
-    /**
      * Pause between each step in the animation
      */
-    private static final int PAUSE_TIME = 16;
+    private static final int PAUSE_TIME = 10;
 
     /**
      * The paddle. You are responsible for drawing this in run(). When you
@@ -105,42 +103,11 @@ public class Breakout extends GraphicsProgram {
     private GOval ball;
 
     /**
-     * The X coordinate of the paddle when moving the mouse
+     * The X coordinate of the paddle when moving the mouse;
      */
     private double paddleX;
-
-    /**
-     * The collider object
-     */
-    private GObject collider;
-
-    /**
-     * The life points of the player
-     */
-    private int lifePoints = NTURNS;
-
-    /**
-     * The visualization of the life points that the player have, and win/lose
-     * scenario
-     */
-    private final String TOP_MESSAGE = "Life points left: ";
-
-    /**
-     * The label on which we will write a message
-     */
-    private GLabel topLabel;
-
-    /**
-     * Positioning the label X coordinate
-     */
-    private double labelX;
-
-    /**
-     * Positioning the label Y coordinate
-     */
-    private double labelY;
-
-    private int bricksLeft;
+    
+    private GObject collision;
 
     /**
      * Runs the program as an application. This method differs from the simplest
@@ -232,28 +199,17 @@ public class Breakout extends GraphicsProgram {
         ball = new GOval(ballX, ballY, BALL_WIDTH, BALL_HEIGHT);
         ball.setFilled(true);
         add(ball);
-
+        // This sets up the program so that mouseMoved() is called when the mouse moves.
         addMouseListeners();
 
+        // this is the "run loop", which runs until isDone becomes true.
+        // You figure out the logic for isDone.
         Random randGen = new Random();
         double vX = randGen.nextDouble() * 3 + 1;
         double vY = 3;
 
-        SetScreenLabel(lifePoints, TOP_MESSAGE);
-
-        bricksLeft = NBRICKS_PER_ROW * NBRICK_ROWS;
-
         while (!isDone) {
             ball.move(vX, vY);
-
-            // Add minimum velocity threshold to ensures that if the velocity in
-            // either the x or y direction falls below MIN_VELOCITY, it will be set to MIN_VELOCITY
-            if (Math.abs(vX) < MIN_VELOCITY) {
-                vX = Math.signum(vX) * MIN_VELOCITY;
-            }
-            if (Math.abs(vY) < MIN_VELOCITY) {
-                vY = Math.signum(vY) * MIN_VELOCITY;
-            }
 
             double xBall = ball.getX();
             double yBall = ball.getY();
@@ -265,141 +221,14 @@ public class Breakout extends GraphicsProgram {
             if (yBall < 0 || yBall > HEIGHT - BALL_HEIGHT) {
                 vY = -vY;
             }
-
+            
             // PART 2
-            // Gets the element position
-            GObject collisionUpLeft = getElementAt(ball.getX(), ball.getY());
-            GObject collisionUpRight = getElementAt(ball.getX() + 2 * BALL_RADIUS, ball.getY());
-            GObject collisionDownLeft = getElementAt(ball.getX(), ball.getY() + 2 * BALL_RADIUS);
-            GObject collisionDownRight = getElementAt(ball.getX() + 2 * BALL_RADIUS, ball.getY() + 2 * BALL_RADIUS);
-
-            // Checking if collision occur.
-            // If collision occured with paddle or label ignores it, otherwise removes the object(the brick/s)
-            if (collisionUpLeft != null && collisionUpLeft != paddle && collisionUpLeft != topLabel) {
-                collider = collisionUpLeft;
-
-                // Makes the ball bouce of the object it hits, collider equals the brick.
-                if (ball.getBounds().intersects(collider.getBounds())) {
-                    vY = -vY * 0.8;
-                    vX = vX * 0.8;
-                }
-
-                // Removes the collided object and remove 1 brick
-                remove(collider);
-                bricksLeft -= 1;
-            } else if (collisionUpRight != null && collisionUpRight != paddle && collisionUpRight != topLabel) {
-                collider = collisionUpRight;
-
-                // Makes the ball bouce of the object it hits, collider equals the brick.
-                if (ball.getBounds().intersects(collider.getBounds())) {
-                    vY = -vY * 0.8;
-                    vX = vX * 0.8;
-                }
-                
-                // Removes the collided object and remove 1 brick
-                remove(collider);
-                bricksLeft -= 1;
-            } else if (collisionDownLeft != null && collisionDownLeft != paddle && collisionDownLeft != topLabel) {
-                collider = collisionDownLeft;
-
-                // Makes the ball bouce of the object it hits, collider equals the brick.
-                if (ball.getBounds().intersects(collider.getBounds())) {
-                    vY = -vY * 0.8;
-                    vX = vX * 0.8;
-                }
-                
-                // Removes the collided object and remove 1 brick
-                remove(collider);
-                bricksLeft -= 1;
-            } else if (collisionDownRight != null && collisionDownRight != paddle && collisionDownRight != topLabel) {
-                collider = collisionDownRight;
-
-                // Makes the ball bouce of the object it hits, collider equals the brick.
-                if (ball.getBounds().intersects(collider.getBounds())) {
-                    vY = -vY * 0.8;
-                    vX = vX * 0.8;
-                }
-
-                // Removes the collided object and remove 1 brick
-                remove(collider);
-                bricksLeft -= 1;
-            }
-
-            // Makes the ball bouce of the paddle when collided
-            if (ball.getBounds().intersects(paddle.getBounds())) {
-                vY = -vY * 0.8;
-                vX = vX * 0.8;
-            }
-
-            // Ball goes under paddle -> lifePoints -= 1; 
-            // if (ball.getY() > paddle.getY() + 20) => this is how i'll do it to be more like a real game
-            // Ball touches the bottom line -> lifePoints -= 1;
-            if (ball.getY() >= HEIGHT - 30) {
-                lifePoints -= 1;
-
-                // Remove the ball and the topLabel from the screen
-                remove(ball);
-                remove(topLabel);
-
-                // Sets the top label again with updated values
-                SetScreenLabel(lifePoints, TOP_MESSAGE);
-
-                // Set the position of the ball in the center again for the next round
-                ball = new GOval(ballX, ballY, BALL_WIDTH, BALL_HEIGHT);
-                ball.setFilled(true);
-
-                // Add the ball again at the set position
-                add(ball);
-            }
-
-            // This code checks if the game is over
-            if (lifePoints == 0) {
-                isDone = true;
-            } else if (bricksLeft <= 0) {
-                isDone = true;
-            }
+            collision = getElementAt(ball.getX(), ball.getY());
 
             pause(PAUSE_TIME);
         }
 
-        // This code checks if the player lost all life points or there is any life points left
-        // Prints the appopriate text on screen.
-        if (lifePoints > 0) {
-            remove(topLabel);
-            GameDoneLabel("You are the WINNER!");
-        } else {
-            remove(topLabel);
-            GameDoneLabel("You Lose!");
-        }
+        // TODO: write any code that happens when the game is over.
     }
 
-    private void SetScreenLabel(int lifePoints, String message) {
-        topLabel = new GLabel(message + lifePoints);
-        topLabel.setFont("Times-36");
-
-        labelY = 0;
-        labelX = 0;
-
-        labelY = topLabel.getHeight();
-
-        labelX = (WIDTH - topLabel.getWidth()) / 2;
-
-        topLabel.setLocation(labelX, labelY);
-        add(topLabel);
-    }
-
-    private void GameDoneLabel(String message) {
-        topLabel = new GLabel(message);
-        topLabel.setFont("Times-36");
-
-        labelY = 0;
-        labelX = 0;
-
-        labelY = topLabel.getHeight();
-
-        labelX = (WIDTH - topLabel.getWidth()) / 2;
-
-        topLabel.setLocation(labelX, labelY);
-        add(topLabel);
-    }
 }
