@@ -134,7 +134,6 @@ public class StarGazer extends GraphicsProgram {
         readConstellation("UrsaMinor_lines.txt", "Ursa Minor", constellations);
 
         // TODO: call your methods here
-        
     }
 
     void readStars(String starstxt, ArrayList<Star> stars) {
@@ -150,9 +149,35 @@ public class StarGazer extends GraphicsProgram {
             // keep reading until we get to the end of the file
             while (s.hasNext()) {
                 String[] inputFromFile = s.nextLine().split(" ");
-                
+
                 double xCoordinate = Double.parseDouble(inputFromFile[0]);
                 double yCoordinate = Double.parseDouble(inputFromFile[1]);
+                int henryDraperId = Integer.parseInt(inputFromFile[3]);
+                double magnitude = Double.parseDouble(inputFromFile[4]);
+
+                Star currentStar;
+                if (inputFromFile.length < 7) {
+                    currentStar = new Star(xCoordinate,
+                            yCoordinate,
+                            henryDraperId,
+                            magnitude);
+                } else {
+                    StringBuilder sb = new StringBuilder(); 
+                    for (int i = 6; i < inputFromFile.length; i++) {
+                        sb.append(" ");
+                        sb.append(inputFromFile[i]);
+                    }
+                    
+                    String starName = sb.toString();
+                    currentStar = new Star(xCoordinate,
+                            yCoordinate,
+                            henryDraperId,
+                            magnitude,
+                            starName);
+                }
+                
+                stars.add(currentStar);
+                
             }
 
             // close the file stream now that we're done

@@ -19,6 +19,14 @@ public class Star {
     private int henryDraperId;
 
     private String starName;
+    
+    public Star(double xCoordinate, double yCoordinate, int henryDraperId, double magnitude) {
+        this.xCoordinate = xCoordinate;
+        this.yCoordinate = yCoordinate;
+        this.henryDraperId = henryDraperId;
+        this.magnitude = magnitude;
+        this.starName = "";
+    }
 
     /**
      * Initializes a new instance of the Star class with the given parameters.
