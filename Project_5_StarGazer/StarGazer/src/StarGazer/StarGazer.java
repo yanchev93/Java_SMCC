@@ -16,6 +16,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -52,23 +53,30 @@ public class StarGazer extends GraphicsProgram {
     // TODO: write your helper methods here
     public GPoint coordsToPixel(double xCoordinate, double yCoordinate, double pixelPicture) {
 
-        double pixelX = (xCoordinate + 0.5) * pixelPicture / 2.0;
-        double pixelY = (0.5 - yCoordinate) * pixelPicture / 2.0;
+        double pixelX = (xCoordinate + 1) * pixelPicture / 2.0;
+        double pixelY = (1 - yCoordinate) * pixelPicture / 2.0;
 
         return new GPoint(pixelX, pixelY);
     }
 
-    public void plotSquare(GPoint gPoint, int size, Color color) {
+    public GRect plotSquare(GPoint gPoint, double size, Color color) {
         double x = gPoint.getX() - size / 2.0;  // Calculate top-left x-coordinate
         double y = gPoint.getY() - size / 2.0;  // Calculate top-left y-coordinate
 
         GRect square = new GRect(x, y, size, size);
         square.setFilled(true);
         square.setColor(color);
-
-        // add the square to the screen
+        
+        return square;
     }
     
+    /**
+     * Read a star's data from given file and add a new Star to the ArrayList.
+     *
+     * @param starstxt - file with stars - X and Y coordinates, Henry Draper ID, Magnitude of the star, and name if available
+     * @param stars - ArrayList to add the Star object to
+     * 
+     */
     public void readStars(String starstxt, ArrayList<Star> stars) {
         try {
             // create the new file input stream and attach a Scanner to it.
@@ -119,6 +127,25 @@ public class StarGazer extends GraphicsProgram {
         } catch (IOException ex) {
             Logger.getLogger(StarGazer.class
                     .getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void drawStars(int displaySize){
+        if (stars != null) {
+            for (Star star : stars) {
+                drawStar(star, displaySize);
+            }
+        }
+    }
+    
+    private void drawStar(Star star, int displaySize){
+        if (star != null) {
+            GPoint pixelCoords = coordsToPixel(star.getXCoordinate(), star.getYCoordinate(), displaySize);
+            double size = star.getMagnitude();
+
+            GRect starRect = plotSquare(pixelCoords, size, Color.WHITE);//new GRect(pixelCoords.getX(), pixelCoords.getY(), size, size);
+            
+            add(starRect);
         }
     }
 
@@ -173,7 +200,7 @@ public class StarGazer extends GraphicsProgram {
 
         // initialize the ArrayLists for Star and Constellation objects
         // TODO: uncomment this when you have implemented the Star class.
-        // stars = new ArrayList();
+        stars = new ArrayList();
         constellations = new ArrayList();
 
         // read constellations
@@ -187,6 +214,9 @@ public class StarGazer extends GraphicsProgram {
         readConstellation("UrsaMinor_lines.txt", "Ursa Minor", constellations);
 
         // TODO: call your methods here
+        int displaySize = WINDOW_SIZE;
+        readStars("stars.txt", stars);
+        drawStars(displaySize);
     }
 
     

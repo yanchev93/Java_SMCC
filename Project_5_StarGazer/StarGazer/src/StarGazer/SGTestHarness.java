@@ -116,30 +116,30 @@ public class SGTestHarness {
     }
     
     public void testStarInitialization() {
-        System.out.println("Uncomment this code when you are ready to test readStars()");
-        
-        System.out.print("Testing star file input and initialization...");
-        ArrayList<Star> stars = new ArrayList();
-        starGazer.readStars("stars.txt", stars);
-        dumpListToFile(TEST_FOLDER_PREFIX + File.separator + TEST_OUTPUT_PREFIX + "stars.txt", stars);
-        System.out.println("DONE");
-        bareBonesDiff(TEST_FOLDER_PREFIX + File.separator + CORRECT_OUTPUT_PREFIX + "stars.txt", 
-                TEST_FOLDER_PREFIX + File.separator + TEST_OUTPUT_PREFIX + "stars.txt");
-        
+//        System.out.println("Uncomment this code when you are ready to test readStars()");
+//        
+//        System.out.print("Testing star file input and initialization...");
+//        ArrayList<Star> stars = new ArrayList();
+//        starGazer.readStars("stars.txt", stars);
+//        dumpListToFile(TEST_FOLDER_PREFIX + File.separator + TEST_OUTPUT_PREFIX + "stars.txt", stars);
+//        System.out.println("DONE");
+//        bareBonesDiff(TEST_FOLDER_PREFIX + File.separator + CORRECT_OUTPUT_PREFIX + "stars.txt", 
+//                TEST_FOLDER_PREFIX + File.separator + TEST_OUTPUT_PREFIX + "stars.txt");
+//        
     }
     
     private void testSquarePlotting() {
-        System.out.println("Uncomment this code when you are ready to test plotSquare()");
-       
-        System.out.print("Testing square plotting...");
-        // You will check this by eye.  Think about what it's supposed to
-        // be doing and judge whether your plotSquare() is correct.
-        for (int i=0; i<10; i++) {
-            starGazer.plotSquare(new GPoint(i*10, i*10), i+4, Color.GREEN);
-        }
-        String[] sizeArgs = {"width=" + StarGazer.WINDOW_SIZE, "height=" + StarGazer.WINDOW_SIZE};
-        starGazer.start(sizeArgs);
-        System.out.println("DONE");
+//        System.out.println("Uncomment this code when you are ready to test plotSquare()");
+//       
+//        System.out.print("Testing square plotting...");
+//        // You will check this by eye.  Think about what it's supposed to
+//        // be doing and judge whether your plotSquare() is correct.
+//        for (int i=0; i<10; i++) {
+//            starGazer.plotSquare(new GPoint(i*10, i*10), i+4, Color.GREEN);
+//        }
+//        String[] sizeArgs = {"width=" + StarGazer.WINDOW_SIZE, "height=" + StarGazer.WINDOW_SIZE};
+//        starGazer.start(sizeArgs);
+//        System.out.println("DONE");
         
     }
     
