@@ -38,7 +38,9 @@ public class Constellation {
 
     /**
      * toString()
-     * @return a formatted String of star pairs.  This is for testing purposes only.
+     *
+     * @return a formatted String of star pairs. This is for testing purposes
+     * only.
      */
     @Override
     public String toString() {

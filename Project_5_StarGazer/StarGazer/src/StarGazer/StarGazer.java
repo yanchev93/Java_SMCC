@@ -1,8 +1,8 @@
 /**
  *  Description: description of program
- *  Author:  your name
- *  Due Date:
- *  Pledged:
+ *  Author:  Teodor Yanchev
+ *  Due Date: 09/12/2023
+ *  Pledged: I wrote this code. Help was found throug youtube, stackoverflow, geeksforgeeks, The ACM Java Libraries - cs.stanford.edu
  *
  */
 package stargazer;
@@ -10,13 +10,10 @@ package stargazer;
 import acm.graphics.*;
 import acm.program.*;
 import java.awt.*;
-import java.awt.event.*;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -231,43 +228,6 @@ public class StarGazer extends GraphicsProgram {
             }
         }
     }
-
-    /**
-     * Finds a constellation by its name
-     *
-     * @param constellationName The name of the constellation to find.
-     * @return The Constellation object with the specified name, or null if not
-     * found.
-     *
-     */
-//    public Constellation findConstellationByName(String constellationName) {
-//        if (constellations != null && constellationName != null) {
-//            for (Constellation constellation : constellations) {
-//                if (constellationName.equals(constellation.getName())) {
-//                    return constellation;
-//                }
-//            }
-//        }
-//
-//        return null;
-//    }
-//
-//    /**
-//     * Plots a line connecting two stars on the display.
-//     *
-//     * @param firstStar The first star in the pair.
-//     * @param secondStar The second star in the pair.
-//     * @param displaySize The size of the display in pixels.
-//     */
-//    private void plotStarConnection(Star firstStar, Star secondStar, int displaySize) {
-//        GPoint firstStarPixel = coordsToPixel(firstStar.getXCoordinate(), firstStar.getYCoordinate(), displaySize);
-//        GPoint secondStarPixel = coordsToPixel(secondStar.getXCoordinate(), secondStar.getYCoordinate(), displaySize);
-//
-//        GLine starConnection = new GLine(firstStarPixel.getX(), firstStarPixel.getY(),
-//                secondStarPixel.getX(), secondStarPixel.getY());
-//        starConnection.setColor(Color.YELLOW);
-//        add(starConnection);
-//    }
 
     /**
      * Read a constellation's data and add a new Constellation to the ArrayList.

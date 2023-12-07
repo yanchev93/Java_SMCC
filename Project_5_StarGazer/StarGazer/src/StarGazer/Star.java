@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package stargazer;
 
 /**
@@ -19,7 +15,7 @@ public class Star {
     private int henryDraperId;
 
     private String starName;
-    
+
     public Star(double xCoordinate, double yCoordinate, int henryDraperId, double magnitude) {
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
@@ -31,11 +27,12 @@ public class Star {
     /**
      * Initializes a new instance of the Star class with the given parameters.
      *
-     * @param xCoordinate      The x-coordinate of the star in the star catalog.
-     * @param yCoordinate      The y-coordinate of the star in the star catalog.
-     * @param henryDraperId    The Henry Draper number, a unique identifier for the star.
-     * @param magnitude        The magnitude or brightness of the star.
-     * @param starName         The name or names of the star (may be empty).
+     * @param xCoordinate The x-coordinate of the star in the star catalog.
+     * @param yCoordinate The y-coordinate of the star in the star catalog.
+     * @param henryDraperId The Henry Draper number, a unique identifier for the
+     * star.
+     * @param magnitude The magnitude or brightness of the star.
+     * @param starName The name or names of the star (may be empty).
      *
      */
     public Star(double xCoordinate, double yCoordinate, int henryDraperId, double magnitude, String starName) {
