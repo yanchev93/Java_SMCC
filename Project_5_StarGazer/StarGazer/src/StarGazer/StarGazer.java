@@ -51,6 +51,16 @@ public class StarGazer extends GraphicsProgram {
     }
 
     // TODO: write your helper methods here
+    /**
+     * Translates star catalog coordinates to pixel coordinates in the app
+     * window.
+     *
+     * @param xCoordinate The x-coordinate of the star in the star catalog.
+     * @param yCoordinate The y-coordinate of the star in the star catalog.
+     * @param pixelPicture The pixels on the app window.
+     * @return A new GPoint containing the x, y location of the star in terms of
+     * pixels.
+     */
     public GPoint coordsToPixel(double xCoordinate, double yCoordinate, double pixelPicture) {
 
         double pixelX = (xCoordinate + 1) * pixelPicture / 2.0;
@@ -59,23 +69,34 @@ public class StarGazer extends GraphicsProgram {
         return new GPoint(pixelX, pixelY);
     }
 
-    public GRect plotSquare(GPoint gPoint, double size, Color color) {
-        double x = gPoint.getX() - size / 2.0;  // Calculate top-left x-coordinate
-        double y = gPoint.getY() - size / 2.0;  // Calculate top-left y-coordinate
+    /**
+     * Draws a square of a specified size and color at the given pixel
+     * coordinates.The middle of the square should be positioned at the
+     * coordinates.
+     *
+     * @param gPoint The GPoint with (x, y) pixel coordinates.
+     * @param starSize The size of a side of the square in pixels.
+     * @param color The Color of the square.
+     * @return
+     */
+    public GRect plotSquare(GPoint gPoint, double starSize, Color color) {
+        double x = gPoint.getX() - starSize / 2.0;  // Calculate top-left x-coordinate
+        double y = gPoint.getY() - starSize / 2.0;  // Calculate top-left y-coordinate
 
-        GRect square = new GRect(x, y, size, size);
+        GRect square = new GRect(x, y, starSize, starSize);
         square.setFilled(true);
         square.setColor(color);
-        
+
         return square;
     }
-    
+
     /**
      * Read a star's data from given file and add a new Star to the ArrayList.
      *
-     * @param starstxt - file with stars - X and Y coordinates, Henry Draper ID, Magnitude of the star, and name if available
+     * @param starstxt - file with stars - X and Y coordinates, Henry Draper ID,
+     * Magnitude of the star, and name if available
      * @param stars - ArrayList to add the Star object to
-     * 
+     *
      */
     public void readStars(String starstxt, ArrayList<Star> stars) {
         try {
@@ -103,12 +124,12 @@ public class StarGazer extends GraphicsProgram {
                             henryDraperId,
                             magnitude);
                 } else {
-                    StringBuilder sb = new StringBuilder(); 
+                    StringBuilder sb = new StringBuilder();
                     for (int i = 6; i < inputFromFile.length; i++) {
                         sb.append(" ");
                         sb.append(inputFromFile[i]);
                     }
-                    
+
                     String starName = sb.toString();
                     currentStar = new Star(xCoordinate,
                             yCoordinate,
@@ -116,12 +137,12 @@ public class StarGazer extends GraphicsProgram {
                             magnitude,
                             starName);
                 }
-                
+
                 stars.add(currentStar);
-                
+
             }
 
-            // close the file stream now that we're done
+            // close the file stream
             fis.close();
 
         } catch (IOException ex) {
@@ -129,25 +150,124 @@ public class StarGazer extends GraphicsProgram {
                     .getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public void drawStars(int displaySize){
+
+    /**
+     * Draws all stars on the display.
+     *
+     * @param displaySize The size of the display in pixels.
+     */
+    public void drawStars(int displaySize) {
         if (stars != null) {
             for (Star star : stars) {
                 drawStar(star, displaySize);
             }
         }
     }
-    
-    private void drawStar(Star star, int displaySize){
+
+    /**
+     * Draws a single star on the display.
+     *
+     * @param star The star to be drawn.
+     * @param displaySize The size of the display in pixels.
+     */
+    private void drawStar(Star star, int displaySize) {
         if (star != null) {
             GPoint pixelCoords = coordsToPixel(star.getXCoordinate(), star.getYCoordinate(), displaySize);
-            double size = star.getMagnitude();
+            long starSize = Math.round(15.0 / (star.getMagnitude() + 2));
 
-            GRect starRect = plotSquare(pixelCoords, size, Color.WHITE);//new GRect(pixelCoords.getX(), pixelCoords.getY(), size, size);
-            
+            GRect starRect = plotSquare(pixelCoords, starSize, Color.WHITE);//new GRect(pixelCoords.getX(), pixelCoords.getY(), size, size);
+
             add(starRect);
         }
     }
+
+    /**
+     * Finds a star by its name in the ArrayList of Star objects.
+     *
+     * @param starName The name of the star to find.
+     * @return The Star object with the specified name, or null if not found.
+     */
+    public Star findStarByName(String starName) {
+        if (stars != null && starName != null) {
+            for (Star star : stars) {
+                if (star.getStarName().contains(starName)) {
+                    return star;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Plots a constellation by connecting stars with lines.
+     *
+     * @param displaySize The size of the display in pixels.
+     *
+     */
+    public void plotConstellation(int displaySize) {
+        for (Constellation constellation : constellations) {
+            ArrayList<String> starPairs = constellation.getStarPairs();
+
+            for (String starPair : starPairs) {
+                String[] currStars = starPair.split(",");
+                if (currStars.length == 2) {
+                    String firstStarName = currStars[0].trim();
+                    String secondStarName = currStars[1].trim();
+
+                    Star firstStar = findStarByName(firstStarName);
+                    Star secondStar = findStarByName(secondStarName);
+
+                    if (firstStar != null && secondStar != null) {
+                        GPoint firstStarPixel = coordsToPixel(firstStar.getXCoordinate(), firstStar.getYCoordinate(), displaySize);
+                        GPoint secondStarPixel = coordsToPixel(secondStar.getXCoordinate(), secondStar.getYCoordinate(), displaySize);
+
+                        GLine starConnection = new GLine(firstStarPixel.getX(), firstStarPixel.getY(),
+                                secondStarPixel.getX(), secondStarPixel.getY());
+                        starConnection.setColor(Color.YELLOW);
+                        add(starConnection);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Finds a constellation by its name
+     *
+     * @param constellationName The name of the constellation to find.
+     * @return The Constellation object with the specified name, or null if not
+     * found.
+     *
+     */
+//    public Constellation findConstellationByName(String constellationName) {
+//        if (constellations != null && constellationName != null) {
+//            for (Constellation constellation : constellations) {
+//                if (constellationName.equals(constellation.getName())) {
+//                    return constellation;
+//                }
+//            }
+//        }
+//
+//        return null;
+//    }
+//
+//    /**
+//     * Plots a line connecting two stars on the display.
+//     *
+//     * @param firstStar The first star in the pair.
+//     * @param secondStar The second star in the pair.
+//     * @param displaySize The size of the display in pixels.
+//     */
+//    private void plotStarConnection(Star firstStar, Star secondStar, int displaySize) {
+//        GPoint firstStarPixel = coordsToPixel(firstStar.getXCoordinate(), firstStar.getYCoordinate(), displaySize);
+//        GPoint secondStarPixel = coordsToPixel(secondStar.getXCoordinate(), secondStar.getYCoordinate(), displaySize);
+//
+//        GLine starConnection = new GLine(firstStarPixel.getX(), firstStarPixel.getY(),
+//                secondStarPixel.getX(), secondStarPixel.getY());
+//        starConnection.setColor(Color.YELLOW);
+//        add(starConnection);
+//    }
 
     /**
      * Read a constellation's data and add a new Constellation to the ArrayList.
@@ -215,10 +335,15 @@ public class StarGazer extends GraphicsProgram {
 
         // TODO: call your methods here
         int displaySize = WINDOW_SIZE;
+
+        // read stars
         readStars("stars.txt", stars);
+
+        // draw stars
         drawStars(displaySize);
+
+        // plot the constellation
+        plotConstellation(displaySize);
     }
 
-    
-    
 }
