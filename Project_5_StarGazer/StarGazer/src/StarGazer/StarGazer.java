@@ -68,6 +68,59 @@ public class StarGazer extends GraphicsProgram {
 
         // add the square to the screen
     }
+    
+    public void readStars(String starstxt, ArrayList<Star> stars) {
+        try {
+            // create the new file input stream and attach a Scanner to it.
+            FileInputStream fis = new FileInputStream(starstxt);
+            Scanner s = new Scanner(fis);
+            // make an ArrayList to hold the Strings with the star pairs (see data file)
+            // We have to make an ArrayList here because the Constellation class
+            // has an ArrayList as a property, and requires that we pass it
+            // to the constructor when creating a new Constellation.
+
+            // keep reading until we get to the end of the file
+            while (s.hasNext()) {
+                String[] inputFromFile = s.nextLine().split(" ");
+
+                double xCoordinate = Double.parseDouble(inputFromFile[0]);
+                double yCoordinate = Double.parseDouble(inputFromFile[1]);
+                int henryDraperId = Integer.parseInt(inputFromFile[3]);
+                double magnitude = Double.parseDouble(inputFromFile[4]);
+
+                Star currentStar;
+                if (inputFromFile.length < 7) {
+                    currentStar = new Star(xCoordinate,
+                            yCoordinate,
+                            henryDraperId,
+                            magnitude);
+                } else {
+                    StringBuilder sb = new StringBuilder(); 
+                    for (int i = 6; i < inputFromFile.length; i++) {
+                        sb.append(" ");
+                        sb.append(inputFromFile[i]);
+                    }
+                    
+                    String starName = sb.toString();
+                    currentStar = new Star(xCoordinate,
+                            yCoordinate,
+                            henryDraperId,
+                            magnitude,
+                            starName);
+                }
+                
+                stars.add(currentStar);
+                
+            }
+
+            // close the file stream now that we're done
+            fis.close();
+
+        } catch (IOException ex) {
+            Logger.getLogger(StarGazer.class
+                    .getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
     /**
      * Read a constellation's data and add a new Constellation to the ArrayList.
@@ -136,56 +189,6 @@ public class StarGazer extends GraphicsProgram {
         // TODO: call your methods here
     }
 
-    void readStars(String starstxt, ArrayList<Star> stars) {
-        try {
-            // create the new file input stream and attach a Scanner to it.
-            FileInputStream fis = new FileInputStream(starstxt);
-            Scanner s = new Scanner(fis);
-            // make an ArrayList to hold the Strings with the star pairs (see data file)
-            // We have to make an ArrayList here because the Constellation class
-            // has an ArrayList as a property, and requires that we pass it
-            // to the constructor when creating a new Constellation.
-
-            // keep reading until we get to the end of the file
-            while (s.hasNext()) {
-                String[] inputFromFile = s.nextLine().split(" ");
-
-                double xCoordinate = Double.parseDouble(inputFromFile[0]);
-                double yCoordinate = Double.parseDouble(inputFromFile[1]);
-                int henryDraperId = Integer.parseInt(inputFromFile[3]);
-                double magnitude = Double.parseDouble(inputFromFile[4]);
-
-                Star currentStar;
-                if (inputFromFile.length < 7) {
-                    currentStar = new Star(xCoordinate,
-                            yCoordinate,
-                            henryDraperId,
-                            magnitude);
-                } else {
-                    StringBuilder sb = new StringBuilder(); 
-                    for (int i = 6; i < inputFromFile.length; i++) {
-                        sb.append(" ");
-                        sb.append(inputFromFile[i]);
-                    }
-                    
-                    String starName = sb.toString();
-                    currentStar = new Star(xCoordinate,
-                            yCoordinate,
-                            henryDraperId,
-                            magnitude,
-                            starName);
-                }
-                
-                stars.add(currentStar);
-                
-            }
-
-            // close the file stream now that we're done
-            fis.close();
-
-        } catch (IOException ex) {
-            Logger.getLogger(StarGazer.class
-                    .getName()).log(Level.SEVERE, null, ex);
-        }
-    }
+    
+    
 }
