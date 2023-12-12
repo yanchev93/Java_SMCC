@@ -2,7 +2,7 @@
  *  Description: description of program
  *  Author:  Teodor Yanchev
  *  Due Date: 09/12/2023
- *  Pledged: I wrote this code. Help was found throug youtube, stackoverflow, geeksforgeeks, The ACM Java Libraries - cs.stanford.edu
+ *  Pledged: I wrote this code. Help was found through youtube, stackoverflow, geeksforgeeks, The ACM Java Libraries - cs.stanford.edu
  *
  */
 package stargazer;
@@ -18,7 +18,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * @author
+ * @author Teodor Yanchev
  */
 public class StarGazer extends GraphicsProgram {
 
@@ -30,8 +30,8 @@ public class StarGazer extends GraphicsProgram {
     /**
      * ArrayList of the stars in the data file
      */
-    // TODO: uncomment this once you have written the Star class.
     private ArrayList<Star> stars;
+    
     /**
      * ArrayList of the constellations in the various data files
      */
@@ -48,6 +48,7 @@ public class StarGazer extends GraphicsProgram {
     }
 
     // TODO: write your helper methods here
+    
     /**
      * Translates star catalog coordinates to pixel coordinates in the app
      * window.
@@ -57,11 +58,12 @@ public class StarGazer extends GraphicsProgram {
      * @param pixelPicture The pixels on the app window.
      * @return A new GPoint containing the x, y location of the star in terms of
      * pixels.
+     * 
      */
     public GPoint coordsToPixel(double xCoordinate, double yCoordinate, double pixelPicture) {
 
-        double pixelX = (xCoordinate + 1) * pixelPicture / 2.0;
-        double pixelY = (1 - yCoordinate) * pixelPicture / 2.0;
+        double pixelX = (xCoordinate + 1) * pixelPicture / 2.0; // The x-coordinate of a star in a star catalog.
+        double pixelY = (1 - yCoordinate) * pixelPicture / 2.0; // The y-coordinate of the star in the star catalog.
 
         return new GPoint(pixelX, pixelY);
     }
@@ -69,12 +71,12 @@ public class StarGazer extends GraphicsProgram {
     /**
      * Draws a square of a specified size and color at the given pixel
      * coordinates.The middle of the square should be positioned at the
-     * coordinates.
+     * coordinates appropriate!
      *
      * @param gPoint The GPoint with (x, y) pixel coordinates.
      * @param starSize The size of a side of the square in pixels.
      * @param color The Color of the square.
-     * @return
+     * @return GRect square object that has to be in the middle.
      */
     public GRect plotSquare(GPoint gPoint, double starSize, Color color) {
         double x = gPoint.getX() - starSize / 2.0;  // Calculate top-left x-coordinate
@@ -90,8 +92,7 @@ public class StarGazer extends GraphicsProgram {
     /**
      * Read a star's data from given file and add a new Star to the ArrayList.
      *
-     * @param starstxt - file with stars - X and Y coordinates, Henry Draper ID,
-     * Magnitude of the star, and name if available
+     * @param starstxt - file with stars - X and Y coordinates, Henry Draper ID, Magnitude of the star, and name if available
      * @param stars - ArrayList to add the Star object to
      *
      */
@@ -100,10 +101,6 @@ public class StarGazer extends GraphicsProgram {
             // create the new file input stream and attach a Scanner to it.
             FileInputStream fis = new FileInputStream(starstxt);
             Scanner s = new Scanner(fis);
-            // make an ArrayList to hold the Strings with the star pairs (see data file)
-            // We have to make an ArrayList here because the Constellation class
-            // has an ArrayList as a property, and requires that we pass it
-            // to the constructor when creating a new Constellation.
 
             // keep reading until we get to the end of the file
             while (s.hasNext()) {
@@ -114,7 +111,8 @@ public class StarGazer extends GraphicsProgram {
                 int henryDraperId = Integer.parseInt(inputFromFile[3]);
                 double magnitude = Double.parseDouble(inputFromFile[4]);
 
-                Star currentStar;
+                // Check the length of the file, so we can choose which constructor to call
+                Star currentStar = null;
                 if (inputFromFile.length < 7) {
                     currentStar = new Star(xCoordinate,
                             yCoordinate,
@@ -172,7 +170,7 @@ public class StarGazer extends GraphicsProgram {
             GPoint pixelCoords = coordsToPixel(star.getXCoordinate(), star.getYCoordinate(), displaySize);
             long starSize = Math.round(15.0 / (star.getMagnitude() + 2));
 
-            GRect starRect = plotSquare(pixelCoords, starSize, Color.WHITE);//new GRect(pixelCoords.getX(), pixelCoords.getY(), size, size);
+            GRect starRect = plotSquare(pixelCoords, starSize, Color.WHITE);
 
             add(starRect);
         }
@@ -294,6 +292,7 @@ public class StarGazer extends GraphicsProgram {
         readConstellation("UrsaMinor_lines.txt", "Ursa Minor", constellations);
 
         // TODO: call your methods here
+        
         int displaySize = WINDOW_SIZE;
 
         // read stars

@@ -16,6 +16,15 @@ public class Star {
 
     private String starName;
 
+    /**
+     * Initializes a new instance of the Star class with the given parameters.
+     *
+     * @param xCoordinate The x-coordinate of the star in the star catalog.
+     * @param yCoordinate The y-coordinate of the star in the star catalog.
+     * @param henryDraperId The Henry Draper identification number, a unique identifier for the star.
+     * @param magnitude The magnitude or brightness of the star.
+     *
+     */
     public Star(double xCoordinate, double yCoordinate, int henryDraperId, double magnitude) {
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
@@ -29,7 +38,7 @@ public class Star {
      *
      * @param xCoordinate The x-coordinate of the star in the star catalog.
      * @param yCoordinate The y-coordinate of the star in the star catalog.
-     * @param henryDraperId The Henry Draper number, a unique identifier for the
+     * @param henryDraperId The Henry Draper identification number, a unique identifier for the
      * star.
      * @param magnitude The magnitude or brightness of the star.
      * @param starName The name or names of the star (may be empty).
